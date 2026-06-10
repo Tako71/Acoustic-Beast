@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Регистрация — Acoustic Beast{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5 col-sm-10">
+                <div class="auth-card">
+                    <h2 class="auth-title">Создать аккаунт</h2>
+                    <p class="auth-sub">Регистрация займёт меньше минуты</p>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.username.label }}</label>
+                            {{ form.username }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.password1.label }}</label>
+                            {{ form.password1 }}
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">{{ form.password2.label }}</label>
+                            {{ form.password2 }}
+                        </div>
+                        {% if form.errors %}
+                        <div class="alert-custom alert-danger mb-4" style="animation:none">
+                            {% for field in form %}{% for error in field.errors %}<div>{{ error }}</div>{% endfor %}{% endfor %}
+                        </div>
+                        {% endif %}
+                        <button type="submit" class="btn-primary-full">Создать аккаунт</button>
+                    </form>
+
+                    <p class="auth-divider">
+                        Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

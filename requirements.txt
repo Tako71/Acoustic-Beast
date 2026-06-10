@@ -1,0 +1,11 @@
+Django==4.2.23
+psycopg2-binary==2.9.10
+python-dotenv==1.0.1
+numpy==1.26.4
+matplotlib==3.8.4
+reportlab==4.2.5
+Pillow==10.4.0
+django-crispy-forms==2.3
+crispy-bootstrap5==2024.2
+whitenoise==6.8.2
+gunicorn==22.0.0

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Документация — Acoustic Beast{% endblock %}
+
+{% block content %}
+<div style="background:var(--dark);padding:60px 0 50px;color:white;text-align:center">
+    <div class="container">
+        <p style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--accent);margin-bottom:12px"
+           data-aos="fade-down">Нормативная база</p>
+        <h1 style="font-size:clamp(28px,4vw,48px);font-weight:800;color:white;letter-spacing:-.03em;margin-bottom:12px"
+            data-aos="fade-up">Документация</h1>
+        <p style="color:rgba(255,255,255,.5);max-width:480px;margin:0 auto" data-aos="fade-up" data-aos-delay="80">
+            Нормативные акты, на которых основан алгоритм расчёта
+        </p>
+    </div>
+</div>
+
+<div class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="d-flex flex-column gap-3">
+                    {% for doc in documents %}
+                    <a href="{{ doc.file_url|default:'#' }}"
+                       {% if doc.file_url %}target="_blank"{% endif %}
+                       class="doc-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}0">
+                        <span class="doc-num">0{{ forloop.counter }}</span>
+                        <span class="doc-title">{{ doc.title }}</span>
+                        <span class="doc-arrow">›</span>
+                    </a>
+                    {% empty %}
+                    <a href="https://drive.google.com/file/d/1o7yKrMvweKAp5EXBaoLlSC59mGfJniGb/preview"
+                       target="_blank" class="doc-card" data-aos="fade-up">
+                        <span class="doc-num">01</span>
+                        <span class="doc-title">ГОСТ ISO 9612 «Акустика. Измерения шума для оценки его воздействия на человека»</span>
+                        <span class="doc-arrow">›</span>
+                    </a>
+                    <a href="#" class="doc-card" data-aos="fade-up" data-aos-delay="80">
+                        <span class="doc-num">02</span>
+                        <span class="doc-title">СанПиН 2.2.4.3359-16 «Санитарно-эпидемиологические требования к физическим факторам на рабочих местах»</span>
+                        <span class="doc-arrow">›</span>
+                    </a>
+                    <a href="#" class="doc-card" data-aos="fade-up" data-aos-delay="160">
+                        <span class="doc-num">03</span>
+                        <span class="doc-title">СП 51.13330.2011 «Защита от шума»</span>
+                        <span class="doc-arrow">›</span>
+                    </a>
+                    <a href="#" class="doc-card" data-aos="fade-up" data-aos-delay="240">
+                        <span class="doc-num">04</span>
+                        <span class="doc-title">«Методические рекомендации по расчёту уровней шума»</span>
+                        <span class="doc-arrow">›</span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+{% block title %}Отчёт #{{ report.pk }} — Acoustic Beast{% endblock %}
+
+{% block content %}
+<div class="result-page">
+    <div class="container">
+
+        <!-- Header -->
+        <div class="result-header d-flex justify-content-between align-items-start flex-wrap gap-3"
+             data-aos="fade-up">
+            <div>
+                <h2 class="result-title">Отчёт о расчёте уровня шума</h2>
+                <div class="result-meta">
+                    {{ report.measurement.company }} &mdash; {{ report.measurement.location }}
+                    &nbsp;·&nbsp; {{ report.measurement.created_at|date:"d.m.Y H:i" }}
+                    &nbsp;·&nbsp; {{ report.measurement.get_strategy_display }}
+                </div>
+            </div>
+            <a href="{% url 'download_pdf' report.pk %}" class="btn-pdf">
+                ↓ Скачать PDF
+            </a>
+        </div>
+
+        <!-- Status banner -->
+        {% if report.exceeds_norm %}
+        <div class="status-banner status-warn" data-aos="fade-up" data-aos-delay="60">
+            <span style="font-size:20px">⚠</span>
+            Эквивалентный уровень шума {{ report.lex_8h }} дБ превышает ПДУ {{ report.norm_value }} дБ
+        </div>
+        {% else %}
+        <div class="status-banner status-ok" data-aos="fade-up" data-aos-delay="60">
+            <span style="font-size:20px">✓</span>
+            Уровень шума {{ report.lex_8h }} дБ в пределах нормы (ПДУ = {{ report.norm_value }} дБ)
+        </div>
+        {% endif %}
+
+        <div class="row g-4 mb-4">
+            <!-- Ключевой показатель -->
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="80">
+                <div class="result-card text-center">
+                    <div class="result-card-title">L<sub>EX,8h</sub></div>
+                    <div class="metric-big {% if report.exceeds_norm %}danger{% else %}success{% endif %}">
+                        {{ report.lex_8h }}
+                    </div>
+                    <div style="font-size:13px;color:var(--gray-lt);margin-top:4px">дБ(А)</div>
+                    <hr style="margin:16px 0;border-color:var(--border)">
+                    <div class="metric-row">
+                        <span class="metric-label">ПДУ</span>
+                        <span class="metric-value">{{ report.norm_value }} дБ</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Отклонение</span>
+                        <span class="metric-value {% if report.exceeds_norm %}danger{% else %}success{% endif %}">
+                            {% if report.exceeds_norm %}+{% endif %}{{ report.lex_8h|add:report.norm_value|floatformat:1 }} дБ
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Статистика -->
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="120">
+                <div class="result-card">
+                    <div class="result-card-title">Статистика</div>
+                    <div class="metric-row">
+                        <span class="metric-label">Стандартное отклонение</span>
+                        <span class="metric-value">{{ report.std_deviation }} дБ</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Максимальное</span>
+                        <span class="metric-value">{{ report.max_noise }} дБ</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Минимальное</span>
+                        <span class="metric-value">{{ report.min_noise }} дБ</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Точек замера</span>
+                        <span class="metric-value">{{ report.measurement.num_points }}</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Стратегия</span>
+                        <span class="metric-value" style="font-size:12px">{{ report.measurement.get_strategy_display }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Точки замера -->
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="160">
+                <div class="result-card">
+                    <div class="result-card-title">Точки замера</div>
+                    <div style="max-height:240px;overflow-y:auto">
+                        {% for point in points %}
+                        <div class="metric-row">
+                            <span class="metric-label">Точка {{ point.point_number }}</span>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="metric-value {% if point.noise_db > report.norm_value %}danger{% endif %}">
+                                    {{ point.noise_db }} дБ
+                                </span>
+                                {% if point.noise_db > report.norm_value %}
+                                <span class="point-badge badge-warn">↑</span>
+                                {% else %}
+                                <span class="point-badge badge-ok">✓</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- График -->
+        <div class="chart-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="result-card-title">График уровней шума по точкам замера</div>
+            <canvas id="noiseChart" height="90"></canvas>
+        </div>
+
+        <!-- Рекомендации -->
+        <div class="recs-card" data-aos="fade-up" data-aos-delay="120">
+            <div class="result-card-title mb-3">
+                {% if report.exceeds_norm %}⚠ Рекомендации по снижению шума{% else %}✓ Заключение{% endif %}
+            </div>
+            {% for line in recommendations %}
+                {% if line %}
+                <div class="rec-item">
+                    <span class="rec-icon">{% if forloop.first and report.exceeds_norm %}🔴{% elif report.exceeds_norm %}›{% else %}✓{% endif %}</span>
+                    <span>{{ line }}</span>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Кнопки -->
+        <div class="d-flex gap-3 mt-4 flex-wrap" data-aos="fade-up">
+            <a href="{% url 'calculate' %}" class="btn-outline-back">← Новый расчёт</a>
+            <a href="{% url 'history' %}" class="btn-outline-back">История</a>
+            <a href="{% url 'download_pdf' report.pk %}" class="btn-pdf ms-auto">↓ Скачать PDF</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% load static %}{% load l10n %}
+<script src="{% static 'js/chart.min.js' %}"></script>
+<script>
+const labels = [{% for p in points %}'Т{{ p.point_number }}'{% if not forloop.last %},{% endif %}{% endfor %}];
+const values = [{% for p in points %}{{ p.noise_db|unlocalize }}{% if not forloop.last %},{% endif %}{% endfor %}];
+const norm   = {{ report.norm_value|unlocalize }};
+
+Chart.defaults.font.family = 'Inter, sans-serif';
+
+new Chart(document.getElementById('noiseChart'), {
+    type: 'line',
+    data: {
+        labels,
+        datasets: [
+            {
+                label: 'Уровень шума, дБ',
+                data: values,
+                borderColor: '#0f0f0f',
+                backgroundColor: 'rgba(15,15,15,.06)',
+                pointRadius: 6,
+                pointBackgroundColor: values.map(v => v > norm ? '#ef4444' : '#22c55e'),
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                tension: 0.4,
+                fill: true,
+                borderWidth: 2,
+            },
+            {
+                label: `ПДУ (${norm} дБ)`,
+                data: Array(labels.length).fill(norm),
+                borderColor: '#ef4444',
+                borderDash: [8, 4],
+                pointRadius: 0,
+                borderWidth: 2,
+                fill: false,
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { position: 'top', labels: { usePointStyle: true, padding: 20, font: { size: 13 } } },
+            tooltip: {
+                callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y} дБ` }
+            }
+        },
+        scales: {
+            y: {
+                title: { display: true, text: 'дБ(А)', font: { size: 12 } },
+                suggestedMin: Math.min(...values) - 5,
+                suggestedMax: Math.max(...values, norm) + 5,
+                grid: { color: '#f3f4f6' }
+            },
+            x: { grid: { color: '#f3f4f6' } }
+        },
+        animation: { duration: 800, easing: 'easeInOutQuart' }
+    }
+});
+</script>
+{% endblock %}

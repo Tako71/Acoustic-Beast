@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Расчёт шума — Acoustic Beast{% endblock %}
+
+{% block content %}
+<div class="calc-page">
+    <div class="container">
+        <div class="calc-header" data-aos="fade-up">
+            <h2>Расчёт уровня шума</h2>
+            <p>Заполните форму по шагам согласно ГОСТ ISO 9612-2016</p>
+        </div>
+
+        <form method="post" id="calculateForm">
+            {% csrf_token %}
+
+            <!-- ── Шаг 1: Стратегия ── -->
+            <div class="step-section" data-aos="fade-up" data-aos-delay="60">
+                <div class="step-header">
+                    <div class="step-icon">1</div>
+                    <div>
+                        <div class="step-header-title">Стратегия расчёта</div>
+                        <div class="step-header-sub">Выберите метод согласно ГОСТ ISO 9612-2016</div>
+                    </div>
+                </div>
+                <div class="step-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="strategy-option">
+                                <input type="radio" name="strategy" value="operation"
+                                       {% if strategy == 'operation' %}checked{% endif %}>
+                                <div>
+                                    <div class="strategy-option-title">По рабочим операциям</div>
+                                    <div class="strategy-option-desc">Каждая операция с известной длительностью</div>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="strategy-option">
+                                <input type="radio" name="strategy" value="function"
+                                       {% if strategy == 'function' %}checked{% endif %}>
+                                <div>
+                                    <div class="strategy-option-title">По трудовой функции</div>
+                                    <div class="strategy-option-desc">Одна функция часть смены</div>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="strategy-option">
+                                <input type="radio" name="strategy" value="day"
+                                       {% if strategy == 'day' %}checked{% endif %}>
+                                <div>
+                                    <div class="strategy-option-title">По рабочему дню</div>
+                                    <div class="strategy-option-desc">Случайные замеры в течение смены</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Шаг 2: Информация ── -->
+            <div class="step-section" data-aos="fade-up" data-aos-delay="120">
+                <div class="step-header">
+                    <div class="step-icon">2</div>
+                    <div>
+                        <div class="step-header-title">Информация об объекте</div>
+                        <div class="step-header-sub">Данные компании и место проведения</div>
+                    </div>
+                </div>
+                <div class="step-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">{{ form.company.label }}</label>
+                            {{ form.company }}
+                            {% if form.company.errors %}
+                            <div class="form-error">{{ form.company.errors|join:", " }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">{{ form.location.label }}</label>
+                            {{ form.location }}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">{{ form.num_points.label }}</label>
+                            {{ form.num_points }}
+                        </div>
+                        <div class="col-md-9">
+                            <label class="form-label">{{ form.notes.label }} <span style="color:var(--gray-lt);font-weight:400">(необязательно)</span></label>
+                            {{ form.notes }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Шаг 3: Точки замера ── -->
+            <div class="step-section" data-aos="fade-up" data-aos-delay="180">
+                <div class="step-header">
+                    <div class="step-icon">3</div>
+                    <div class="flex-1">
+                        <div class="step-header-title">Данные замеров</div>
+                        <div class="step-header-sub" id="strategyHint">Укажите количество точек на шаге 2</div>
+                    </div>
+                    <button type="button" class="btn-generate" id="generateFields">
+                        Сформировать поля →
+                    </button>
+                </div>
+                <div class="step-body" id="pointsBody" style="display:none">
+                    <div id="pointsContainer"></div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end mt-2" data-aos="fade-up" data-aos-delay="240">
+                <button type="submit" class="btn-calc" id="submitBtn" disabled>
+                    Рассчитать →
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/calculate.js' %}"></script>
+{% endblock %}

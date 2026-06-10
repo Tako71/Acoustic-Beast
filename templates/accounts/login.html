@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Авторизация — Acoustic Beast{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5 col-sm-10">
+                <div class="auth-card">
+                    <h2 class="auth-title">С возвращением</h2>
+                    <p class="auth-sub">Войдите, чтобы начать расчёт</p>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.username.label }}</label>
+                            {{ form.username }}
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">{{ form.password.label }}</label>
+                            {{ form.password }}
+                        </div>
+                        {% if form.errors %}
+                        <div class="alert-custom alert-danger mb-4" style="animation:none">
+                            Неверный логин или пароль. Попробуйте ещё раз.
+                        </div>
+                        {% endif %}
+                        <button type="submit" class="btn-primary-full">Войти</button>
+                    </form>
+
+                    <p class="auth-divider">
+                        Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

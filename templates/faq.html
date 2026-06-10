@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block title %}FAQ — Acoustic Beast{% endblock %}
+
+{% block content %}
+<div style="background:var(--dark);padding:60px 0 50px;color:white;text-align:center">
+    <div class="container">
+        <p style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--accent);margin-bottom:12px"
+           data-aos="fade-down">Справочная информация</p>
+        <h1 style="font-size:clamp(28px,4vw,48px);font-weight:800;color:white;letter-spacing:-.03em;margin-bottom:12px"
+            data-aos="fade-up">Часто задаваемые вопросы</h1>
+        <p style="color:rgba(255,255,255,.5);max-width:440px;margin:0 auto" data-aos="fade-up" data-aos-delay="80">
+            Быстрые ответы для новых пользователей
+        </p>
+    </div>
+</div>
+
+<div class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion">
+
+                    <div class="faq-item" data-aos="fade-up">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#faq1">
+                                Что такое ГОСТ ISO 9612-2016?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                ГОСТ ISO 9612-2016 — российский стандарт, соответствующий международному ISO 9612.
+                                Определяет методы измерений шума на рабочих местах для оценки его воздействия
+                                на человека. Стандарт описывает три стратегии расчёта эквивалентного уровня шума
+                                за 8-часовой рабочий день (L<sub>EX,8h</sub>).
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-aos="fade-up" data-aos-delay="60">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#faq2">
+                                Какую стратегию расчёта выбрать?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <strong>На основе рабочих операций</strong> — если рабочий день разбит
+                                на отдельные технологические операции с известной длительностью каждой.<br><br>
+                                <strong>На основе трудовой функции</strong> — если выполняется одна трудовая
+                                функция определённое время в течение смены.<br><br>
+                                <strong>На основе рабочего дня</strong> — наиболее простой способ:
+                                случайные замеры в течение всей смены. Подходит при использовании дозиметров.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-aos="fade-up" data-aos-delay="120">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Каков предельно допустимый уровень шума?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Согласно СанПиН 2.2.4.3359-16, эквивалентный уровень звука на рабочих местах
+                                не должен превышать <strong>80 дБ(А)</strong> за 8-часовой рабочий день.
+                                При превышении работодатель обязан принять меры по снижению шума и
+                                обеспечить персонал средствами индивидуальной защиты органов слуха.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-aos="fade-up" data-aos-delay="180">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#faq4">
+                                Как сохранить результат расчёта?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                После выполнения расчёта система автоматически сохраняет результат.
+                                На странице отчёта нажмите кнопку <strong>«Скачать PDF»</strong> —
+                                будет сформирован документ с таблицей результатов, графиком и рекомендациями.
+                                Все ваши расчёты доступны в разделе <strong>«История»</strong>.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-aos="fade-up" data-aos-delay="240">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#faq5">
+                                Сколько точек замеров нужно?
+                            </button>
+                        </h2>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                ГОСТ ISO 9612-2016 рекомендует минимум <strong>3 замера</strong> для
+                                статистически достоверного результата. Оптимальное число — 5–10 точек,
+                                расположенных в характерных рабочих зонах помещения.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
