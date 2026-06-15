@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(psql -U postgres -c \"CREATE DATABASE noise_analysis_db;\")",
+      "Bash(launchctl start *)",
+      "Bash(PGPASSWORD=postgres /Library/PostgreSQL/18/bin/psql -U postgres -h 127.0.0.1 -p 5432 -c \"SELECT version\\(\\);\")",
+      "Bash(/Library/PostgreSQL/18/bin/initdb -D /Users/artempilecki/PycharmProjects/acoscticbeast/.pgdata --locale=ru_RU.UTF-8 -E UTF8)",
+      "Bash(/Library/PostgreSQL/18/bin/psql *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://127.0.0.1:8000/static/css/style.css\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://127.0.0.1:8000/static/js/calculate.js\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://127.0.0.1:8000/static/img/logo.png\")",
+      "Bash(curl -s \"http://127.0.0.1:8000/\")",
+      "Bash(python manage.py test noise.tests.ResultViewTest.test_result_page_contains_lex_8h --verbosity=2)",
+      "Bash(python manage.py test noise --verbosity=1)",
+      "Bash(python *)",
+      "Bash(docker build *)",
+      "Bash(bash -n entrypoint.sh)",
+      "Bash(git init *)",
+      "Bash(git config *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "Bash(ssh *)",
+      "Bash(python3 *)",
+      "Bash(git stash *)",
+      "Bash(git pull *)"
+    ]
+  }
+}
